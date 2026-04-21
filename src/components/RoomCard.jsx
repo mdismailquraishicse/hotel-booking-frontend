@@ -8,8 +8,8 @@ function RoomCard({room}){
     const handleClick = ()=>{
         console.log("generating summary...")
         const summary_data = {
-            room_id: room.room_id,
-            room_type: room.room_type,
+            room_type_id: room.room_type_id,
+            // room_type: room.room_type,
             check_in: room.check_in,
             check_out: room.check_out,
             capacity: room.capacity,

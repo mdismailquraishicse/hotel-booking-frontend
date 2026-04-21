@@ -11,8 +11,10 @@ function Bookings(){
     useEffect(()=>{
         async function fetchRooms(){
             try {
-                const res = await axios.get("http://127.0.0.1:8000/bookings");
-                setBooking(res.data)
+                const token = localStorage.getItem("token")
+                const res = await axios.get("http://127.0.0.1:8000/api/v1/bookings/fetch-bookings", {headers: {Authorization: `Bearer ${token}`}});
+                console.log(res)
+                setBooking(res.data.result)
             } catch (err) {
                 console.error("Failed to fetch rooms:", err)
             }
@@ -28,12 +30,13 @@ function Bookings(){
                 <table className="bookings-table" >
                     <thead>
                         <tr>
-                            <th>Room id</th>
+                            <th>Room Number</th>
                             <th>Type</th>
                             <th>Check-in</th>
                             <th>Check-out</th>
                             <th>Guests</th>
                             <th>Price</th>
+                            <th>Status</th>
                         </tr>
                     </thead>
 
@@ -41,12 +44,13 @@ function Bookings(){
                         {booking.map((item) => (
                             <tr key={item.room_id}>
 
-                                <td>{item.room_id}</td>
+                                <td>{item.room_no}</td>
                                 <td>{item.room_type}</td>
                                 <td>{item.check_in}</td>
                                 <td>{item.check_out}</td>
-                                <td>{item.capacity}</td>
+                                <td>{item.guests}</td>
                                 <td>{item.price}</td>
+                                <td>{item.status}</td>
                             </tr>
                         ))}
                     </tbody>

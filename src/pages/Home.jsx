@@ -15,7 +15,7 @@ function Home(){
     useEffect(()=>{
         async function fetchRooms(){
             try {
-                const res = await axios.get("http://127.0.0.1:8000/search-available-rooms");
+                const res = await axios.get("http://127.0.0.1:8000/api/v1/rooms/search-available-rooms");
                 setRooms(res.data.result)
             } catch (err) {
                 console.error("Failed to fetch rooms:", err)
@@ -27,7 +27,6 @@ function Home(){
     return (
         <div className="container">
             <Navbar />
-            {/* <Hero /> */}
             <Hero setRooms={setRooms} setSearchActive={setSearchActive} />
             <div>
                 <h2 id="rooms">
@@ -36,7 +35,7 @@ function Home(){
 
                 <div className="room-listing">
                     {rooms.map(room => (
-                        <RoomCard key={room.room_id} room={room} />
+                        <RoomCard key={room.room_type_id} room={room} />
                     ))}
                 </div>
 

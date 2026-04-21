@@ -1,12 +1,14 @@
 import "./Login.css";
+import "../styles/global.css"
 import axios from "axios";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { login } from "../services/api";
 
 
 function Login(){
+    const [errorMessage, setErrorMessage] = useState("")
     const navigate = useNavigate();
-
     const [formData, setFormData] = useState({
         email: "",
         password: "",
@@ -19,18 +21,17 @@ function Login(){
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        const response = await axios.post(
-            "http://127.0.0.1:8000/login",
-            {email:formData.email, password:formData.password},
-            {
-                headers:{"Content-Type": "application/json"}
-            }
-        );
-        const token = response.data.token
-        if (token){
+        const response = await login(formData.email, formData.password);
+        const token = response.result
+
+        if (response.status === "failed") {
+            setErrorMessage(response.message);
+        }
+        else {
             localStorage.setItem("token", token);
             navigate("/")
         }
+
     };
 
     return (
@@ -46,6 +47,7 @@ function Login(){
             <p className="login-footer" >Don't have an account?
                 <span onClick={() => navigate("/register")}>Register</span>
             </p>
+            <p className="error">{errorMessage}</p>
             </div>
         </div>
     )
