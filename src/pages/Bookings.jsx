@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import axios from "axios";
 import { useState } from "react";
 import "./Bookings.css"
+import { cancelBooking } from "../services/api";
 
 
 function Bookings(){
@@ -22,6 +23,16 @@ function Bookings(){
         fetchRooms();
     }, []);
 
+    const handleCancelBooking = (id) => {
+        // alert("this is cancel booking", id)
+        const confirmDelete = window.confirm("Are you sure you want to cancel this booking?");
+
+        if (!confirmDelete) return;
+
+        cancelBooking(id)
+        setBooking((prev) => prev.filter((item) => item.id !== id));
+    }
+
     return (
         <div className="bookings-container">
             <Navbar />
@@ -37,6 +48,7 @@ function Bookings(){
                             <th>Guests</th>
                             <th>Price</th>
                             <th>Status</th>
+                            <th>Action</th>
                         </tr>
                     </thead>
 
@@ -51,6 +63,10 @@ function Bookings(){
                                 <td>{item.guests}</td>
                                 <td>{item.price}</td>
                                 <td>{item.status}</td>
+                                <button className="btn-cancel" onClick={
+                                    () => handleCancelBooking(item.id)
+                                }
+                                >Cancel Booking</button>
                             </tr>
                         ))}
                     </tbody>

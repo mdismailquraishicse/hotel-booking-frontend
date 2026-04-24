@@ -65,3 +65,13 @@ export async function handleBookNow(id, checkIn, checkOut, guests, price) {
     console.log("response: ", response)
     return response.data
 };
+
+export async function cancelBooking(bookingID){
+    const token = localStorage.getItem("token")
+    const response = await axios.delete(`${base_url}/api/v1/bookings/delete-booking/${bookingID}`,
+        {
+            headers: {Authorization: `Bearer ${token}`}
+        }
+    );
+    return response
+}
