@@ -1,0 +1,97 @@
+import axios from "axios";
+
+const base_url = "http://127.0.0.1:8000"
+
+export async function registerUser(name, gender, email, password){
+
+    const response = await axios.post(
+        `${base_url}/api/v1/auth/register`,
+        {
+            name: name,
+            gender: gender,
+            email: email,
+            password: password
+        },
+        {
+            headers:{"Content-Type": "application/json"}
+        }
+    );
+    return response.data
+};
+
+export async function login(email, password){
+    const response = await axios.post(
+        `${base_url}/api/v1/auth/login`,
+        {
+            email: email, password: password
+        },
+        {
+            headers: {"Content-Type": "application/json"}
+        }
+    );
+    return response.data
+};
+
+export default async function handleSearch(checkIn, checkOut, guests){
+    const token = localStorage.getItem("token")
+    const response =await axios.get(`${base_url}/api/v1/rooms/search-available-rooms`, {
+        params: {
+            check_in:checkIn,
+            check_out:checkOut,
+            capacity:guests
+        },
+
+        headers: {Authorization: token}
+
+        });
+    if (response.data.status === 'success'){
+        return response.data.result
+    }
+    else {
+        console.log("status not success")
+        return []
+    }
+};
+
+export async function handleBookNow(id, checkIn, checkOut, guests, price) {
+
+    const token = localStorage.getItem("token")
+    const response= await axios.post(`${base_url}/api/v1/bookings/book-now`,
+        {room_type_id: id, check_in:checkIn, check_out:checkOut, guests:guests, price:price},
+        {
+            headers: {Authorization: `Bearer ${token}`}
+        }
+    );
+    console.log("response: ", response)
+    return response.data
+};
+
+export async function cancelBooking(bookingID){
+    const token = localStorage.getItem("token")
+    const response = await axios.delete(`${base_url}/api/v1/bookings/delete-booking/${bookingID}`,
+        {
+            headers: {Authorization: `Bearer ${token}`}
+        }
+    );
+    return response
+}
+
+export async function makePayment(bookingID, amount, desc){
+    const newTab = window.open("", "_blank");
+    const token = localStorage.getItem("token")
+    const payment_response = await axios.post(`${base_url}/api/v1/pay/create-payment-link`,
+        {
+            booking_id:bookingID,
+            amount: amount,
+            desc: desc,
+        },
+        {
+            headers: { Authorization: `Bearer ${token}`}
+        }
+    );
+
+    if (payment_response.data.status === "success"){
+        const link = payment_response.data.result.payment_link
+        newTab.location.href = link;
+    };
+}

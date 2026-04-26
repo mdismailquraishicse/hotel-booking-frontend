@@ -1,0 +1,30 @@
+ul {
+    list-style: none;
+    display: flex;
+    gap: 20px;
+    align-items: center;
+    justify-content: center;
+    color: black;
+    border: none;
+    text-decoration: none;
+    color: inherit;
+}
+
+a {
+    color: black;
+    border: none;
+    text-decoration: none;
+    color: inherit;
+}
+
+h1 {
+    text-align: center;
+}
+
+h2 {
+    text-align: center;
+}
+
+.error{
+    color: red;
+}

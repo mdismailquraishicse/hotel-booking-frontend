@@ -1,0 +1,35 @@
+.amenities-container {
+    padding: 30px;
+    text-align: center;
+}
+
+.amenities-container h2 {
+    margin-bottom: 20px;
+    font-size: 24px;
+}
+/* Grid layout */
+.amenities-list {
+    list-style: none;
+    padding: 0;
+
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
+}
+
+/* Each item */
+.amenities-list li {
+    background: #f5f5f5;
+    padding: 15px;
+    border-radius: 10px;
+
+    font-weight: 500;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+/* Hover effect */
+.amenities-list li:hover {
+    background: #007bff;
+    color: white;
+    transform: translateY(-5px);
+}
