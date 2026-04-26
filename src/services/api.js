@@ -75,3 +75,23 @@ export async function cancelBooking(bookingID){
     );
     return response
 }
+
+export async function makePayment(bookingID, amount, desc){
+    const newTab = window.open("", "_blank");
+    const token = localStorage.getItem("token")
+    const payment_response = await axios.post(`${base_url}/api/v1/pay/create-payment-link`,
+        {
+            booking_id:bookingID,
+            amount: amount,
+            desc: desc,
+        },
+        {
+            headers: { Authorization: `Bearer ${token}`}
+        }
+    );
+
+    if (payment_response.data.status === "success"){
+        const link = payment_response.data.result.payment_link
+        newTab.location.href = link;
+    };
+}

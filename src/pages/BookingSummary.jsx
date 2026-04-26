@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
-import { handleBookNow } from "../services/api";
+import { handleBookNow, makePayment } from "../services/api";
 import { useNavigate } from "react-router-dom";
 import "./BookingSummary.css"
 import "../styles/global.css"
@@ -18,16 +18,17 @@ function BookingSummary(){
             alert("Please select check-in and check-out dates");
             return
         }
-        const res =await handleBookNow(summary.room_type_id, checkIn, checkOut, summary.capacity, summary.totalAmount)
-        if (res.status === "failed") {
-            setErrorMessage(res.message)
+        const bookNowRes =await handleBookNow(summary.room_type_id, checkIn, checkOut, summary.capacity, summary.totalAmount)
+        if (bookNowRes.status === "failed") {
+            setErrorMessage(bookNowRes.message)
             return;
         };
-        if (res.status === "success") {
-            if (res.result === false) {
-                setErrorMessage(res.message)
+        if (bookNowRes.status === "success") {
+            if (bookNowRes.result === -1) {
+                setErrorMessage(bookNowRes.message)
                 return;
             }
+            const response_payment = await makePayment(bookNowRes.result, summary.totalAmount, "Hotel booking")
         };
         navigate("/bookings")
     };
@@ -35,7 +36,6 @@ function BookingSummary(){
     return (
         <div className="booking-summary">
             <h1>Booking Summary</h1>
-            {/* <p>Room: {summary.room_type}</p> */}
 
             <span>Check-in: <input type="date" onChange={(e)=>{
                 setCheckIn(e.target.value)
